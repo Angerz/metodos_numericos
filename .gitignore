@@ -1,0 +1,29 @@
+# Entorno virtual
+venv/
+.env/
+
+# Archivos temporales
+__pycache__/
+*.pyc
+*.pyo
+
+# Archivos de datos
+*.csv
+*.txt
+*.mat
+*.jpg
+*.png
+
+# Configuración del editor
+.vscode/
+.idea/
+
+# Salidas generadas
+*.log
+*.pdf
+*.docx
+*.pptx
+*.png
+
+# Archivos creados por matplotlib
+*.svg
