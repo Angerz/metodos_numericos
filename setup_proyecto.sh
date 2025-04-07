@@ -12,6 +12,7 @@ touch $PROYECTO/core/{newton_raphson.py,minimos_cuadrados.py,rk4_motor.py,utils.
 touch $PROYECTO/benchmark/{benchmark_unidad1.py,benchmark_unidad2.py,benchmark_unidad3.py}
 touch $PROYECTO/doc/{README.md,bitacora.md}
 touch $PROYECTO/data/.gitkeep
+touch $PROYECTO/cli/{cli_newton.py,cli_minimos_cuadrados.py,cli_rk4_motor.py}
 
 # Crear archivo de dependencias
 cat > $PROYECTO/requirements.txt <<EOL
