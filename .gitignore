@@ -9,6 +9,7 @@ __pycache__/
 
 # Archivos de datos
 *.csv
+**/*.csv
 *.txt
 *.mat
 *.jpg
