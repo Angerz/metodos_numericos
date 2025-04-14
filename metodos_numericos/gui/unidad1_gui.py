@@ -1,68 +1,89 @@
-import PySimpleGUI as sg
+import customtkinter as ctk
 import numpy as np
 import sympy as sp
 import sys
 import os
 
-# Permitir imports desde la raíz del proyecto
+# Agregar el path del core
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from core.newton_raphson import newton_raphson_system
 
-# Variables simbólicas
-theta3, theta6, theta8, theta11, R10 = sp.symbols('theta3 theta6 theta8 theta11 R10')
+# Configuración inicial de la GUI
+ctk.set_appearance_mode("System")
+ctk.set_default_color_theme("blue")
 
-# Ecuaciones simbólicas
-eq1 = 5.632*sp.cos(theta3) + 11.533*sp.cos(theta6) - 84.348*sp.cos(theta8) - 15
-eq2 = 5.632*sp.sin(theta3) + 11.533*sp.sin(theta6) - 84.348*sp.sin(theta8) + 89.548
-eq3 = 5.632*sp.cos(theta3) - 0.985*sp.cos(theta6) - 17.151*sp.sin(theta6) + 46*sp.cos(theta11) + 6.5
-eq4 = 5.632*sp.sin(theta3) - 0.985*sp.sin(theta6) + 17.151*sp.cos(theta6) + 46*sp.cos(theta11) + R10
+# Ventana principal
+class NewtonGUI(ctk.CTk):
+    def __init__(self):
+        super().__init__()
+        self.title("Unidad 1 - Newton-Raphson")
+        self.geometry("600x480")
 
-# Layout
-layout = [
-    [sg.Text('Análisis Posicional por Newton-Raphson', font=('Helvetica', 14), justification='center')],
-    [sg.Text('Ingrese los valores iniciales (en grados):')],
-    [sg.Text('θ3:'), sg.InputText('10', key='theta3'), sg.Text('θ6:'), sg.InputText('20', key='theta6')],
-    [sg.Text('θ8:'), sg.InputText('30', key='theta8'), sg.Text('θ11:'), sg.InputText('40', key='theta11')],
-    [sg.Text('R10:'), sg.InputText('20.0', key='R10')],
-    [sg.Button('Ejecutar'), sg.Button('Salir')],
-    [sg.Text('Resultado:', font=('Helvetica', 12))],
-    [sg.Multiline(size=(60, 10), key='output')]
-]
+        # Título
+        self.title_label = ctk.CTkLabel(self, text="Análisis Posicional - Newton-Raphson", font=ctk.CTkFont(size=20, weight="bold"))
+        self.title_label.pack(pady=12)
 
-window = sg.Window('Unidad 1 - Newton-Raphson', layout)
+        # Inputs
+        self.inputs_frame = ctk.CTkFrame(self)
+        self.inputs_frame.pack(pady=10)
 
-while True:
-    event, values = window.read()
-    if event in (sg.WIN_CLOSED, 'Salir'):
-        break
+        """ self.theta3 = self._create_input("θ3 (°):", "10")
+        self.theta6 = self._create_input("θ6 (°):", "20")
+        self.theta8 = self._create_input("θ8 (°):", "30")
+        self.theta11 = self._create_input("θ11 (°):", "40")"""
 
-    if event == 'Ejecutar':
+        self.r10 = self._create_input("R10:", "20")
+        # Botón de ejecución
+        self.solve_button = ctk.CTkButton(self, text="Ejecutar", command=self.solve_system)
+        self.solve_button.pack(pady=10)
+
+        # Área de resultados
+        self.result_box = ctk.CTkTextbox(self, height=160, width=500)
+        self.result_box.pack(pady=10)
+
+    def _create_input(self, label, default):
+        frame = ctk.CTkFrame(self.inputs_frame)
+        frame.pack(pady=4, padx=10, fill="x")
+        lbl = ctk.CTkLabel(frame, text=label)
+        lbl.pack(side="left", padx=10)
+        entry = ctk.CTkEntry(frame)
+        entry.insert(0, default)
+        entry.pack(side="right", expand=True, fill="x", padx=10)
+        return entry
+
+    def solve_system(self):
         try:
-            # Parseo de entradas
-            t3 = np.radians(float(values['theta3']))
-            t6 = np.radians(float(values['theta6']))
-            t8 = np.radians(float(values['theta8']))
-            t11 = np.radians(float(values['theta11']))
-            r10_val = float(values['R10'])
+            # Variables simbólicas
+            theta3, theta6, theta8, theta11, R10 = sp.symbols('theta3 theta6 theta8 theta11 R10')
 
-            initial_guess = [t3, t6, t8, t11]
+            # Ecuaciones
+            eq1 = 5.632*sp.cos(theta3) + 11.533*sp.cos(theta6) - 84.348*sp.cos(theta8) - 15
+            eq2 = 5.632*sp.sin(theta3) + 11.533*sp.sin(theta6) - 84.348*sp.sin(theta8) + 89.548
+            eq3 = 5.632*sp.cos(theta3) - 0.985*sp.cos(theta6) - 17.151*sp.sin(theta6) + 46*sp.cos(theta11) + 6.5
+            eq4 = 5.632*sp.sin(theta3) - 0.985*sp.sin(theta6) + 17.151*sp.cos(theta6) + 46*sp.cos(theta11) + R10
 
-            equations = [eq1, eq2, eq3, eq4.subs(R10, r10_val)]
+            equations = [eq1, eq2, eq3, eq4.subs(R10, float(self.r10.get()))]
             variables = [theta3, theta6, theta8, theta11]
+
+            initial_guess = [np.radians(10), np.radians(20), np.radians(30), np.radians(40)]
 
             solution, errors, iterations = newton_raphson_system(equations, variables, initial_guess)
 
-            output_text = ''
+            output = "✅ Solución encontrada (en grados):\n"
             for var, val in zip(variables, solution):
                 val_norm = val % (2 * np.pi)
-                output_text += f"{var} = {np.degrees(val_norm):.4f}°\n"
+                output += f"{var} = {np.degrees(val_norm):.4f}°\n"
 
-            output_text += f"\nIteraciones: {iterations}\nError final: {errors[-1]:.2e}"
+            output += f"\n📈 Iteraciones: {iterations}\n📉 Error final: {errors[-1]:.2e}"
 
-            window['output'].update(output_text)
+            self.result_box.delete("0.0", "end")
+            self.result_box.insert("0.0", output)
 
         except Exception as e:
-            window['output'].update(f"❌ Error: {str(e)}")
+            self.result_box.delete("0.0", "end")
+            self.result_box.insert("0.0", f"❌ Error: {str(e)}")
 
-window.close()
+if __name__ == "__main__":
+    app = NewtonGUI()
+    app.mainloop()

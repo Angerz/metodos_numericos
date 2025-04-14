@@ -1,6 +1,9 @@
 import pandas as pd
 import numpy as np
 import os
+import sys
+
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 def generar_datos_sinteticos(
     csv_path,
@@ -21,8 +24,8 @@ def generar_datos_sinteticos(
 
         real = df[col].values
 
-        alpha = np.random.uniform(0.98, 1.02)   # ganancia
-        beta = np.random.uniform(-0.5, 0.5)     # offset
+        alpha = np.random.uniform(0.9, 1.1  )   # ganancia
+        beta = np.random.uniform(-1, 1)     # offset
         ruido = np.random.normal(0, ruido_std, size=len(real))
 
         sensor = alpha * real + beta + ruido
