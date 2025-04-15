@@ -7,7 +7,7 @@ J = 0.02    # Momento de inercia (kg.m^2)
 b = 0.1     # Fricción viscosa (N.m.s)
 K = 0.05    # Constante de torque y fuerza contraelectromotriz (Nm/A)
 
-def motor_dc_model(t, x, V_func):
+def motor_dc_model(t, x, V_func, R=2.0, L=0.5, J=0.02, b=0.1, K=0.05):
     """
     Modelo de un motor DC en espacio de estados.
     x[0] = theta (posición)
