@@ -36,7 +36,7 @@ class CalibracionApp(ctk.CTk):
         self.resultado_texto.pack(side="right", fill="y", padx=10)
 
         # Botón para cargar CSV
-        self.boton_cargar = ctk.CTkButton(self, text="📂 Cargar archivo CSV", command=self.cargar_csv)
+        self.boton_cargar = ctk.CTkButton(self, text="Cargar archivo CSV", command=self.cargar_csv)
         self.boton_cargar.pack(pady=15)
 
         self.canvas = None
@@ -53,10 +53,10 @@ class CalibracionApp(ctk.CTk):
 
             # Mostrar resultados
             self.resultado_texto.delete("0.0", "end")
-            self.resultado_texto.insert("end", f"📁 Archivo: {nombre}\n\n")
-            self.resultado_texto.insert("end", f"📈 Ecuación:\n{resultados['ecuacion']}\n\n")
-            self.resultado_texto.insert("end", f"📉 RMSE: {resultados['rmse']:.4f}\n")
-            self.resultado_texto.insert("end", f"🔍 R²:   {resultados['r2']:.4f}\n")
+            self.resultado_texto.insert("end", f"Archivo: {nombre}\n\n")
+            self.resultado_texto.insert("end", f"Ecuación:\n{resultados['ecuacion']}\n\n")
+            self.resultado_texto.insert("end", f"RMSE: {resultados['rmse']:.4f}\n")
+            self.resultado_texto.insert("end", f"R²:   {resultados['r2']:.4f}\n")
 
             # Mostrar la imagen guardada por calibrar_y_evaluar()
             self.mostrar_grafica(nombre)

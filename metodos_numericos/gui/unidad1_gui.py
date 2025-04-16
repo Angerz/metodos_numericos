@@ -28,11 +28,6 @@ class NewtonGUI(ctk.CTk):
         self.inputs_frame = ctk.CTkFrame(self)
         self.inputs_frame.pack(pady=10)
 
-        """ self.theta3 = self._create_input("θ3 (°):", "10")
-        self.theta6 = self._create_input("θ6 (°):", "20")
-        self.theta8 = self._create_input("θ8 (°):", "30")
-        self.theta11 = self._create_input("θ11 (°):", "40")"""
-
         self.r10 = self._create_input("R10:", "20")
         # Botón de ejecución
         self.solve_button = ctk.CTkButton(self, text="Ejecutar", command=self.solve_system)
